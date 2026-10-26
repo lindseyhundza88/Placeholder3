@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Activity – Logging a Placeholder Entry (Bill4Time)</title>
+<style>
+:root{--blue:#2a48a2;--btn:#3777e0;--ylw:#fcc10a;--red:#c0282d;--grn:#1f5c2a;--tint:#e4ebf8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Open Sans","Segoe UI",Roboto,Arial,sans-serif;color:#222;background:#e8edf3;padding:14px}
+#app{max-width:1020px;margin:0 auto}
+.panel{background:#fff;border:1px solid #c5ccd8;border-radius:3px;overflow:hidden;margin-bottom:10px}
+.ph{background:var(--blue);color:#fff;font-weight:700;font-size:14px;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tools{display:flex;gap:8px;align-items:center}
+.pill{background:#6c85d6;border-radius:10px;font-size:10px;padding:2px 10px;font-weight:600}
+.hbtn{background:transparent;border:1px solid #9fb2e6;color:#fff;border-radius:4px;font-size:11px;padding:4px 11px;cursor:pointer;font-family:inherit}
+.hbtn:hover{background:#3a58b4}
+.scn{background:#c9d6ee;color:#1d2f66;font-size:12.5px;padding:10px 16px;line-height:1.45}
+.sh{color:#fff;font-weight:700;font-size:12px;padding:9px 16px}.sh.b{background:var(--blue)}
+.bd{padding:16px 18px;font-size:13.5px;line-height:1.5}
+.bd ol{margin:8px 0 0;padding-left:20px;font-size:13px}
+.bt{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.pbtn{border:0;border-radius:5px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--btn);color:#fff;font-family:inherit}
+.pbtn:hover{background:#2a68d0}
+.so{background:#f1f1f1;border:1px solid #9b9b9b;border-radius:3px;padding:7px 16px;font-size:12px;cursor:pointer;font-family:inherit}.so:hover{background:#e3e3e3}
+/* stepper */
+#stepper{display:flex;align-items:flex-start;padding:4px 6px 10px}
+.stp{display:flex;flex-direction:column;align-items:center;width:60px;font-size:9.5px;color:#999;font-weight:600}
+.stp i{width:22px;height:22px;border-radius:50%;background:#c8c8c8;color:#fff;font-style:normal;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.stp.on i{background:var(--blue)}.stp.on{color:var(--blue)}.stp.dn i{background:#4a76d4}.stp.dn{color:#4a76d4}
+.ln{flex:1;height:2px;background:#cdd3de;margin:10px 4px 0}.ln.dn{background:#4a76d4}
+/* prompt */
+#prompt{background:#fff6d6;border:1px solid #e8c15a;border-radius:4px;padding:11px 16px;margin-bottom:10px;font-size:13px;line-height:1.5;display:flex;gap:11px;align-items:flex-start}
+#prompt .n{flex:0 0 22px;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+#prompt .sample{display:inline-block;margin-top:6px;background:#fff;border:1px dashed #c9a23a;padding:3px 8px;border-radius:3px;font-weight:600;user-select:text}
+.tbtn{margin-left:8px;border:0;border-radius:4px;background:var(--ylw);color:#111;font-weight:700;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
+/* add time area */
+#addArea{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.add{background:var(--blue);color:#fff;border:0;border-radius:3px;padding:10px 22px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.add:hover{background:#1f3a8a}
+#addArea span{font-size:11px;color:#777;font-style:italic}
+/* form */
+.win{border:1px solid #b8bfcc;background:#fff;margin-bottom:10px}
+.bar{height:30px;background:var(--blue);color:#fff;font-weight:700;font-size:12px;padding:8px 14px;position:relative}
+.bar .tm{position:absolute;right:12px;top:0;line-height:30px;font-size:11px;font-weight:600}
+.fm{padding:8px 16px 4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;column-gap:46px}
+.row{display:grid;grid-template-columns:104px 1fr;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid #eee;min-height:30px}
+.row>label{text-align:right;font-size:11.5px;color:#555}
+.fc{display:flex;align-items:center;gap:8px}
+.fld{display:block;height:22px;border:1px solid #bbb;background:#ececec;font-size:11px;padding:3px 8px;line-height:15px;width:100%;max-width:170px;color:#333;font-family:inherit}
+.fld.v{background:#e3f6e8;border-color:#4caf6a;color:#14502a;font-weight:600}
+.fld.er{background:#fff4f4;border-color:#d98a8a}
+input.fld{background:#fff}
+input.fld:disabled{background:#ececec;color:#999}
+.plain{font-size:11.5px;color:#333}
+.chk{width:12px;height:12px;border:1px solid #aaa;background:#eee;border-radius:2px;display:inline-block;font-size:9px;line-height:10px;text-align:center;color:#888}
+.sel{height:24px;padding:2px 6px;background:#fff;border:1px solid #999;font-size:11.5px;font-family:inherit;color:#111;width:100%;max-width:230px}
+.sel:disabled{background:#ececec;border-color:#ccc;color:#999}
+.sel.v{background:#e3f6e8;border-color:#4caf6a;color:#14502a}
+.tick{color:#1f8a3a;font-weight:700;font-size:14px}
+.lblD{display:flex;justify-content:space-between;align-items:flex-end;margin:12px 0 4px;font-size:11.5px;color:var(--red);font-weight:600}
+textarea{width:100%;height:78px;resize:vertical;border:1px solid #a9a9a9;background:var(--tint);padding:9px 10px;font:12.5px/1.45 "Segoe UI",Arial,sans-serif;color:#111;outline:none;user-select:text}
+textarea:disabled{background:#e9edf4;color:#999}
+textarea:focus{border-color:#4a76d4;box-shadow:0 0 0 1px #4a76d4}
+textarea.v{background:#eefaf0;border-color:#4caf6a}textarea.v:disabled{color:#111;-webkit-text-fill-color:#111}
+.dm{display:flex;justify-content:space-between;font-size:10px;color:#999;margin:3px 0 2px;min-height:15px}
+.dm .ok{color:#1f8a3a;font-size:11px}.dm .no{color:#b33;font-size:11px}
+.cb{font-size:11px;display:flex;align-items:center;gap:6px;margin:2px 0 8px}
+.tg{border-top:1px solid #ddd;padding:6px 16px 8px}
+.get{font-size:10px;color:#2f5fb8;cursor:pointer;background:none;border:0;font-family:inherit;padding:0}.get:hover{text-decoration:underline}
+.foot{background:#eee;border-top:1px solid #dcdcdc;display:flex;align-items:center;gap:5px;padding:10px 14px}
+.fb{height:30px;padding:0 15px;font-size:11px;font-weight:600;border:1px solid #bbb;background:#f7f7f7;color:#222;cursor:pointer;font-family:inherit;border-radius:2px}
+.fb.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.fb.d{background:#c4c4c4;border-color:#c4c4c4;color:#f4f4f4;cursor:not-allowed}
+.fb:not(.d):not(.p):hover{background:#e9e9e9}
+.sp{flex:1}
+.hl{outline:3px solid var(--ylw);outline-offset:2px;box-shadow:0 0 0 5px rgba(0,0,0,.25),0 0 14px 4px rgba(252,193,10,.85);animation:pulse 1.2s infinite;position:relative;z-index:3}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(0,0,0,.18),0 0 6px 1px rgba(252,193,10,.7)}50%{box-shadow:0 0 0 5px rgba(0,0,0,.18),0 0 18px 6px rgba(252,193,10,.95)}}
+.shake{animation:shake .35s}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-14px);z-index:50;max-width:88%;padding:9px 16px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 3px 12px rgba(0,0,0,.3);text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.warn{background:#fff3d1;border:1px solid #f0b429;color:#5a3a00}#toast.ok{background:#dff5e6;border:1px solid #3fae67;color:#0d4a24}#toast.info{background:#e3edff;border:1px solid #6b93e6;color:#17316f}
+.done .dh2{background:var(--grn);color:#fff;font-weight:700;font-size:14px;padding:11px 16px}
+.sum{background:#f0faf2;border:1px solid #4caf6a;border-radius:3px;padding:10px 14px;margin:8px 0 12px;font-size:12.5px}
+.sum div{display:grid;grid-template-columns:130px 1fr;padding:3px 0}.sum b{font-weight:700}
+.df{background:#eee;border-top:1px solid #ddd;padding:10px 18px;text-align:right}
+@media(max-width:700px){.g2{grid-template-columns:1fr}.stp{width:44px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="panel">
+    <div class="ph">Practice Activity — Logging a Placeholder Entry
+      <span class="tools"><button class="hbtn" id="hint" style="display:none">Need a hint?</button><button class="hbtn" id="restart">Restart</button><span class="pill">Interactive</span></span></div>
+    <div class="scn">Any time you are out of the office for a full day — PTO, sick day, holiday, or appointment — you must still log an entry in Bill4Time to keep your hours aligned with UKG. Follow the prompts below to practice entering a placeholder entry. <span id="modeNote"></span></div>
+  </div>
+
+  <div id="intro" class="panel"><div class="sh b" style="font-size:14px">Two parts: watch it, then do it</div><div class="bd">
+    <p style="margin:0">You are out of the office for a full day, but your hours still need to line up with your UKG timecard. You'll log a <b>placeholder entry</b>: the right client, matter and activity, a short out-of-office description, and an 8:00am – 4:00pm time range.</p>
+    <ol><li><b>Part 1 – Guided walkthrough:</b> each field is highlighted and the answer is given.</li><li><b>Part 2 – Practice on your own:</b> same entry with nothing highlighted and no answers shown. A hint button is there if you get stuck.</li></ol>
+    <div class="bt"><button class="pbtn" id="goG">Start Part 1: Guided walkthrough</button></div></div></div>
+
+  <div id="main" style="display:none">
+    <div id="stepper"></div>
+    <div id="prompt"></div>
+    <div id="addArea"><button class="add" id="btnAdd">+ Add Time</button><span>Click to open the New Time Entry form</span></div>
+
+    <div class="win" id="win" style="display:none">
+      <div class="bar">New Time Entry<span class="tm">▶ 00:00:00 ↺</span></div>
+      <div class="fm">
+        <div class="g2">
+          <div>
+            <div class="row"><label>For User:</label><span class="fld" style="max-width:170px">Account, Test</span></div>
+            <div class="row"><label>Client:</label><div class="fc"><select class="sel" id="cl"></select><span class="tick" id="t1"></span></div></div>
+            <div class="row"><label>Matter:</label><div class="fc"><select class="sel" id="mt"></select><span class="tick" id="t2"></span></div></div>
+            <div class="row"><label>Activity:</label><div class="fc"><select class="sel" id="ac"></select><span class="tick" id="t3"></span></div></div>
+          </div>
+          <div>
+            <div class="row"><label>Entry Type:</label><span class="plain">Hourly Work</span></div>
+            <div class="row"><label>Overtime:</label><span class="chk"></span></div>
+            <div class="row"><label>Billable:</label><span class="chk">✓</span></div>
+            <div class="row"><label>Exclude From Invoice:</label><span class="chk"></span></div>
+            <div class="row" style="border:0"><label>Date Created:</label><span class="plain" style="font-weight:600">09/23/2026</span></div>
+          </div>
+        </div>
+        <div class="lblD"><span>Private Description: *</span></div>
+        <textarea id="ds" placeholder="Enter your description here..." spellcheck="false" disabled></textarea>
+        <div class="dm"><span id="dmsg"></span><span id="cnt">Character Count: 0</span></div>
+        <div class="cb"><span class="chk" style="background:#8aa4d6;border-color:#8aa4d6;color:#fff">✓</span>Show private description on the invoice?</div>
+      </div>
+      <div class="tg"><div class="g2">
+        <div>
+          <div class="row"><label>Date of Work:</label><span class="fld" style="max-width:170px">09/23/2026</span></div>
+          <div class="row"><label>Start Time:</label><div class="fc"><input class="fld" id="st" placeholder="e.g. 8:00am" autocomplete="off" disabled><span class="tick" id="t4"></span></div></div>
+          <div class="row"><label>End Time:</label><div class="fc"><input class="fld" id="en" placeholder="e.g. 4:00pm" autocomplete="off" disabled><button class="get" id="gt">Get Time</button><span class="tick" id="t5"></span></div></div>
+        </div>
+        <div>
+          <div class="row"><label>Labor Time (hrs):</label><input class="fld" id="lb" value="—" disabled></div>
+          <div class="row"><label>Rate $:</label><span class="fld" style="max-width:170px">$0.00</span></div>
+          <div class="row"><label>Travel Time (hrs):</label><input class="fld" value="—" disabled></div>
+          <div class="row"><label>Billable (hrs):</label><input class="fld" id="bl" value="—" disabled></div>
+        </div>
+      </div></div>
+      <div class="foot"><button class="fb" id="bOver">Start Over</button><span class="sp"></span><button class="fb d" id="sv">Save &amp; Close</button><button class="fb d">Save &amp; New</button><button class="fb d">Save &amp; Duplicate</button><button class="fb" id="bCancel">Cancel</button></div>
+    </div>
+
+    <div id="midPanel" class="panel done" style="display:none"><div class="dh2">✓ Walkthrough complete — now it's your turn</div><div class="bd"><p style="margin:0 0 6px"><b>Nice work.</b> You logged a full-day placeholder with the right client, matter, activity, description and times.</p><p style="margin:0">In Part 2 you'll do it again <b>without help</b> — nothing is highlighted and the answers aren't shown.</p></div><div class="df"><button class="pbtn" id="goP">Start Part 2: Practice on your own</button> <button class="so" id="redoG">Repeat the walkthrough</button></div></div>
+
+    <div id="donePanel" class="panel done" style="display:none"><div class="dh2">✓ Placeholder entry complete — great work!</div><div class="bd">
+      <p style="margin:0">You correctly logged a full-day out-of-office placeholder. Here is what the completed entry should look like:</p>
+      <div class="sum">
+        <div><b>Client:</b><span>SLS Operations</span></div><div><b>Matter:</b><span>_PTO_Sick_OOO-SLS Operations</span></div><div><b>Activity:</b><span>Other</span></div>
+        <div><b>Description:</b><span>Out of Office – PTO <i>(or Sick / Holiday / Appointment)</i></span></div><div><b>Start Time:</b><span>8:00am</span></div><div><b>End Time:</b><span>4:00pm</span></div><div><b>Labor Time:</b><span>8 hours (auto-calculated)</span></div>
+      </div>
+      <p style="margin:0">Remember — even when you are not working, this entry ensures your Bill4Time hours stay aligned with your UKG timecard for the day.</p>
+      <p id="errLine" style="margin:10px 0 0;color:#555;font-size:12px"></p></div>
+      <div class="df"><button class="so" id="again">Try Again</button> <button class="so" id="againG">Start over from the walkthrough</button></div></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+/* ============ EDITABLE CONTENT ============ */
+const CFG={
+  client:'SLS Operations',matter:'_PTO_Sick_OOO-SLS Operations',activity:'Other',start:'8:00am',end:'4:00pm',
+  descOptions:['Out of Office – PTO','Out of Office – Sick','Out of Office – Holiday','Out of Office – Appointment'],
+  clients:['ARCare','CPAP','Electrostim','OPIOID','SLS Operations'],
+  matters:['Atlas-SLS Operations','Baby Formula-SLS Ops','Belviq-SLS Ops','CPAP-SLS Ops','_PTO_Sick_OOO-SLS Operations'],
+  activities:['Other','SLS_Paralegal_001_Client Communication','SLS_Paralegal_002_Case Audit','SLS_Paralegal_007_Medical Record Review','SLS_Paralegal_017_Data Clean Up']
+};
+const LAB=['Add Time','Client','Matter','Activity','Description','Times'];
+/* guided text / practice text per step */
+const G=[
+ 'Click <b>Add Time</b> to open a new time entry form. You will use this any time you need to log a placeholder for a day out of the office.',
+ 'In the <b>Client</b> field, choose <b>SLS Operations</b> — this is always the client used for placeholder entries.',
+ 'In the <b>Matter</b> field, choose <b>_PTO_Sick_OOO-SLS Operations</b> — the matter used for out-of-office time.',
+ 'In the <b>Activity</b> field, choose <b>Other</b>.',
+ 'In the <b>Private Description</b> field, enter the reason for your absence. Use one of the following: <i>Out of Office – PTO</i>, <i>Out of Office – Sick</i>, <i>Out of Office – Holiday</i>, or <i>Out of Office – Appointment</i>.<br><span class="sample" id="smp">Out of Office – PTO</span><button class="tbtn" id="typeIt">Type it for me</button>',
+ 'Enter a full-day time range. Type <b>8:00am</b> as the <b>Start Time</b>, then <b>4:00pm</b> as the <b>End Time</b> (or click <b>Get Time</b> after the start). Labor time calculates automatically. Then click <b>Save &amp; Close</b>.'
+];
+const P=[
+ 'Open a new time entry form to log your out-of-office day.',
+ 'Select the client that is used for every placeholder entry.',
+ 'Select the matter used for out-of-office time.',
+ 'Select the activity for a placeholder entry.',
+ 'Write the reason for your absence in the Private Description, using the standard out-of-office wording.',
+ 'Enter a full-day time range for the placeholder (the standard workday), then save the entry.'
+];
+let mode='guided',step=0,sub=0,errors=0,tT=null,hintOn=false;
+function toast(m,t){const e=$('#toast');e.className=t;e.innerHTML=m;void e.offsetWidth;e.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('show'),3400)}
+function shake(){const w=$('#win');w.classList.remove('shake');void w.offsetWidth;w.classList.add('shake')}
+function parseT(s){const m=String(s).trim().match(/^(\d{1,2})(?::?(\d{2}))?\s*([ap])\.?m?\.?$/i);if(!m)return null;let h=+m[1],mi=+(m[2]||0);if(h<1||h>12||mi>59)return null;return(h%12+(m[3].toLowerCase()==='p'?12:0))*60+mi}
+function fmt(min){let h=Math.floor(min/60),m=min%60;const ap=h>=12?'pm':'am';h=h%12||12;return h+':'+String(m).padStart(2,'0')+ap}
+function opts(a,first){return '<option value="">'+first+'</option>'+a.map(x=>'<option>'+x+'</option>').join('')}
+/* stepper + prompt */
+function renderStepper(){
+  let h='';LAB.forEach((l,i)=>{const c=i<step?'dn':i===step?'on':'';h+=(i?'<div class="ln '+(i<=step?'dn':'')+'"></div>':'')+'<div class="stp '+c+'"><i>'+(i<step?'✓':i+1)+'</i>'+l+'</div>'});
+  $('#stepper').innerHTML=h;
+}
+function renderPrompt(){
+  if(step>5){return}
+  $('#prompt').innerHTML='<span class="n">'+(step+1)+'</span><div><b>Step '+(step+1)+' — '+LAB[step]+'.</b> '+(mode==='guided'?G[step]:P[step])+'</div>';
+  if($('#typeIt'))$('#typeIt').addEventListener('click',typeIt);
+}
+function target(){
+  if(step===0)return '#btnAdd';if(step===1)return '#cl';if(step===2)return '#mt';if(step===3)return '#ac';if(step===4)return '#ds';
+  if(!$('#st').classList.contains('v'))return '#st';if(!$('#en').classList.contains('v'))return '#en';return '#sv';
+}
+function applyHl(){
+  document.querySelectorAll('.hl').forEach(x=>x.classList.remove('hl'));
+  if(step>5)return;
+  if(mode==='guided'||hintOn)$(target()).classList.add('hl');
+}
+function refresh(){renderStepper();renderPrompt();applyHl()}
+/* form state */
+function setForm(){
+  $('#cl').disabled=step!==1;$('#mt').disabled=step!==2;$('#ac').disabled=step!==3;
+  $('#ds').disabled=step!==4;$('#st').disabled=step<5;$('#en').disabled=step<5;
+}
+function reset(){
+  $('#cl').innerHTML=opts(CFG.clients,'Search');$('#mt').innerHTML=opts(CFG.matters,'Search');$('#ac').innerHTML=opts(CFG.activities,'Select Activity');
+  ['cl','mt','ac'].forEach(i=>{$('#'+i).classList.remove('v');$('#'+i).value=''});
+  ['t1','t2','t3','t4','t5'].forEach(i=>$('#'+i).textContent='');
+  $('#ds').value='';$('#ds').classList.remove('v');$('#dmsg').innerHTML='';$('#cnt').textContent='Character Count: 0';
+  ['st','en'].forEach(i=>{$('#'+i).value='';$('#'+i).classList.remove('v','er')});
+  $('#lb').value='—';$('#bl').value='—';$('#lb').classList.remove('v');$('#bl').classList.remove('v');
+  $('#sv').className='fb d';hintOn=false;
+}
+function start(m){
+  mode=m;step=0;errors=0;reset();
+  ['intro','midPanel','donePanel'].forEach(i=>$('#'+i).style.display='none');
+  $('#main').style.display='block';$('#addArea').style.display='flex';$('#win').style.display='none';$('#prompt').style.display='flex';$('#stepper').style.display='flex';
+  $('#hint').style.display=m==='practice'?'':'none';
+  $('#modeNote').textContent=m==='guided'?'Part 1: the next thing to click is highlighted.':'Part 2: nothing is highlighted — use “Need a hint?” if you get stuck.';
+  setForm();refresh();window.scrollTo(0,0);
+}
+function advance(){step++;setForm();refresh()}
+/* events */
+$('#btnAdd').addEventListener('click',()=>{if(step!==0)return;$('#addArea').style.display='none';$('#win').style.display='block';advance();$('#win').scrollIntoView({block:'nearest',behavior:'smooth'})});
+function bindSel(id,idx,val,tick,label){
+  $('#'+id).addEventListener('change',e=>{
+    if(step!==idx)return;const s=e.target;
+    if(s.value===val){s.classList.add('v');$('#'+tick).textContent='✓';advance();toast(label+' is correct.','ok')}
+    else if(s.value){errors++;toast(mode==='guided'?'Not quite — choose <b>'+val+'</b>.':'That isn’t the one used for placeholder entries. Try again.','warn');s.value='';shake()}
+  });
+}
+bindSel('cl',1,CFG.client,'t1','Client');bindSel('mt',2,CFG.matter,'t2','Matter');bindSel('ac',3,CFG.activity,'t3','Activity');
+['cl','mt','ac'].forEach((id,i)=>$('#'+id).parentNode.addEventListener('mousedown',e=>{if($('#'+id).disabled&&step<i+1&&step>0){errors++;toast('Complete the earlier steps first.','warn')}}));
+function checkDesc(){
+  const v=$('#ds').value;$('#cnt').textContent='Character Count: '+v.length;
+  const ok=/^\s*out of office\s*[–—-]\s*(pto|sick|holiday|appointment)\s*$/i.test(v);
+  $('#ds').classList.toggle('v',ok);
+  $('#dmsg').innerHTML=ok?'<span class="ok">✓ Looks good</span>':(v.length>12?'<span class="no">Use the standard wording, e.g. “Out of Office – PTO”.</span>':'');
+  return ok;
+}
+$('#ds').addEventListener('input',()=>{if(step===4&&checkDesc()){advance()}});
+function typeIt(){
+  if(step!==4)return;const t=CFG.descOptions[0];$('#ds').value='';let i=0;
+  (function n(){$('#ds').value=t.slice(0,++i);if(i<t.length)setTimeout(n,25);else{checkDesc();advance()}})();
+}
+function commit(which){
+  const el=$('#'+which),v=el.value.trim();if(!v)return;
+  const want=which==='st'?CFG.start:CFG.end,m=parseT(v);
+  if(m==null){el.classList.add('er');errors++;toast('Enter the time like <b>8:00am</b>.','warn');return}
+  if(fmt(m)!==want){el.classList.add('er');errors++;toast(which==='st'?'A full-day placeholder starts at <b>'+CFG.start+'</b>.':'A full-day placeholder ends at <b>'+CFG.end+'</b> (an 8-hour day).','warn');return}
+  el.value=fmt(m);el.classList.remove('er');el.classList.add('v');$(which==='st'?'#t4':'#t5').textContent='✓';
+  if($('#st').classList.contains('v')&&$('#en').classList.contains('v'))finishTimes();else applyHl();
+}
+function finishTimes(){
+  const h=(parseT($('#en').value)-parseT($('#st').value))/60;
+  $('#lb').value=String(h);$('#bl').value=h.toFixed(2);$('#lb').classList.add('v');$('#bl').classList.add('v');
+  $('#sv').className='fb p';toast('Labor time calculated: <b>'+h+' hours</b>.','ok');applyHl();
+}
+['st','en'].forEach(id=>{const e=$('#'+id);
+  e.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();commit(id)}});
+  e.addEventListener('blur',()=>commit(id));
+  e.addEventListener('mousedown',ev=>{if(e.disabled&&step<5){errors++;toast('Complete the earlier steps first.','warn')}});
+});
+$('#gt').addEventListener('click',()=>{
+  if(step<5){errors++;toast('Complete the earlier steps first.','warn');return}
+  if(!$('#st').classList.contains('v')){errors++;toast('Enter the <b>Start Time</b> first.','warn');return}
+  $('#en').value=CFG.end;commit('en');
+});
+$('#sv').addEventListener('click',()=>{
+  if($('#sv').classList.contains('d')){errors++;toast('Finish the entry first — start and end time are needed.','warn');shake();return}
+  success();
+});
+function success(){
+  $('#win').style.display='none';$('#prompt').style.display='none';$('#stepper').style.display='none';
+  if(mode==='guided'){$('#midPanel').style.display='block';
+    try{const p=window.parent&&window.parent.GetPlayer&&window.parent.GetPlayer();if(p)p.SetVar('Placeholder_GuidedComplete',true)}catch(e){}
+    try{window.parent.postMessage({type:'b4t-placeholder-guided-complete'},'*')}catch(e){}
+    return}
+  $('#donePanel').style.display='block';
+  $('#errLine').textContent=errors?('Wrong selections or entries in Part 2: '+errors):'No wrong selections in Part 2 — perfect run.';
+  try{const p=window.parent&&window.parent.GetPlayer&&window.parent.GetPlayer();if(p){p.SetVar('Placeholder_Complete',true);p.SetVar('Placeholder_Errors',errors)}}catch(e){}
+  try{window.parent.postMessage({type:'b4t-placeholder-complete',errors:errors},'*')}catch(e){}
+}
+$('#bOver').addEventListener('click',()=>start(mode));
+$('#bCancel').addEventListener('click',()=>toast('For this practice, finish the entry and click <b>Save &amp; Close</b>.','info'));
+document.querySelectorAll('.fb.d').forEach(b=>{if(b.id!=='sv')b.addEventListener('click',()=>toast('Use <b>Save &amp; Close</b> for this practice.','info'))});
+$('#goG').addEventListener('click',()=>start('guided'));$('#goP').addEventListener('click',()=>start('practice'));
+$('#redoG').addEventListener('click',()=>start('guided'));$('#again').addEventListener('click',()=>start('practice'));$('#againG').addEventListener('click',()=>start('guided'));
+$('#restart').addEventListener('click',()=>start('guided'));
+$('#hint').addEventListener('click',()=>{hintOn=true;applyHl()});
+window.B4TPlace={state:()=>({mode,step,errors})};
+})();
+</script>
+</body>
+</html>
